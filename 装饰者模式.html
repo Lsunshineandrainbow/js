@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+    let wear = function () {
+        console.log('穿第一件衣服')
+    }
+    const _wear1 = wear
+    wear = function () {
+        _wear1()
+        console.log('穿第二件衣服');
+    }
+    const _wear2 = wear
+    wear = function () {
+        _wear2()
+        console.log('穿第三件衣服')
+    }
+    wear()
+    console.log('____________________________')
+    _wear1()
+    console.log('____________________________')
+    _wear2()
+    console.log('____________________________')
+
+    Function.prototype.before = function (beforefn) {
+        var _this = this            // 保存原函数引用
+        return function () {        //  返回新函数的代理函数
+            beforefn.apply(this,arguments)      // 执行新函数，修正this
+            return _this.apply(this,arguments)  //执行原函数
+        }
+    }
+    Function.prototype.after = function (afterfn) {
+        var _this =this
+        return function () {
+            var ret =_this.apply(this,arguments)
+            afterfn.apply(this,arguments)
+            return ret
+        }
+    }
+    var func =function () {
+        console.log("2")
+    }
+    func = func.before(function(){
+        console.log("1")
+    }).after(function(){
+        console.log("3")
+    })
+    func()
+</script>
